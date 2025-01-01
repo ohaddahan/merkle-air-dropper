@@ -1,11 +1,17 @@
 [toolchain]
+anchor_version = "0.29.0"
+solana_version = "1.18.20"
+
+
+[workspace]
+members = ["programs/merkle-air-dropper"]
 
 [features]
 seeds = false
 skip-lint = false
 
 [programs.localnet]
-bla = "J5qyvFxq8JprXYyo4n5qGZ8cYuCZUKi6wEzuSmDTPEgB"
+merkle-air-dropper = "J5qyvFxq8JprXYyo4n5qGZ8cYuCZUKi6wEzuSmDTPEgB"
 
 [registry]
 url = "https://api.apr.dev"
