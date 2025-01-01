@@ -8,10 +8,12 @@ use std::{env, fs};
 pub fn read_air_dropper_plan_from_file(path: &str) -> Vec<Claimant> {
     let cwd = env::current_dir().unwrap();
     let full_path = format!("{}/{}", cwd.to_str().unwrap_or_default(), path);
-    let file_content = fs::read_to_string(full_path.clone()).expect(&format!(
-        "[read_merkle_from_file]::Failed to read the file = {}",
-        full_path
-    ));
+    let file_content = fs::read_to_string(full_path.clone()).unwrap_or_else(|_| {
+        panic!(
+            "[read_merkle_from_file]::Failed to read the file = {}",
+            full_path
+        )
+    });
     let vec: Vec<Claimant> =
         serde_json::from_str(&file_content).expect("Failed to deserialize JSON");
     vec

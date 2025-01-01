@@ -26,7 +26,7 @@ pub struct CreateMerkleAirDropper<'info> {
     pub signer_token_account: Box<Account<'info, TokenAccount>>,
     #[account(
     init,
-    seeds = [MerkleAirDropper::SEED.as_bytes().as_ref(),mint.key().as_ref(), &args.seed.to_le_bytes()],
+    seeds = [MerkleAirDropper::SEED.as_bytes(),mint.key().as_ref(), &args.seed.to_le_bytes()],
     space = MerkleAirDropper::LEN,
     payer = signer,
     bump,
