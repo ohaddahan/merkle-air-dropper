@@ -19,7 +19,7 @@ export type ClaimAirDropStatusArgs = {
   isClaimed: boolean
   claimant: web3.PublicKey
   mint: web3.PublicKey
-  distributor: web3.PublicKey
+  merkleAirDropper: web3.PublicKey
   claimedAt: beet.bignum
   amount: beet.bignum
 }
@@ -40,7 +40,7 @@ export class ClaimAirDropStatus implements ClaimAirDropStatusArgs {
     readonly isClaimed: boolean,
     readonly claimant: web3.PublicKey,
     readonly mint: web3.PublicKey,
-    readonly distributor: web3.PublicKey,
+    readonly merkleAirDropper: web3.PublicKey,
     readonly claimedAt: beet.bignum,
     readonly amount: beet.bignum
   ) {}
@@ -54,7 +54,7 @@ export class ClaimAirDropStatus implements ClaimAirDropStatusArgs {
       args.isClaimed,
       args.claimant,
       args.mint,
-      args.distributor,
+      args.merkleAirDropper,
       args.claimedAt,
       args.amount
     )
@@ -167,7 +167,7 @@ export class ClaimAirDropStatus implements ClaimAirDropStatusArgs {
       isClaimed: this.isClaimed,
       claimant: this.claimant.toBase58(),
       mint: this.mint.toBase58(),
-      distributor: this.distributor.toBase58(),
+      merkleAirDropper: this.merkleAirDropper.toBase58(),
       claimedAt: (() => {
         const x = <{ toNumber: () => number }>this.claimedAt
         if (typeof x.toNumber === 'function') {
@@ -210,7 +210,7 @@ export const claimAirDropStatusBeet = new beet.BeetStruct<
     ['isClaimed', beet.bool],
     ['claimant', beetSolana.publicKey],
     ['mint', beetSolana.publicKey],
-    ['distributor', beetSolana.publicKey],
+    ['merkleAirDropper', beetSolana.publicKey],
     ['claimedAt', beet.i64],
     ['amount', beet.u64],
   ],
