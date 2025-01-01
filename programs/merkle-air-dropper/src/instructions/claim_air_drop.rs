@@ -31,40 +31,34 @@ pub struct ClaimAirDrop<'info> {
     payer = claimant
     )]
     pub claimant_token_account: Box<Account<'info, TokenAccount>>,
-    /// The [MerkleDistributor].
     #[account(mut,
-    seeds = [b"MerkleDistributor".as_ref(),mint.key().as_ref()],
-    bump=distributor.bump
+    seeds = [MerkleAirDropper::SEED.as_bytes(), mint.key().as_ref()],
+    bump=merkle_air_dropper.bump
     )]
-    pub distributor: Account<'info, MerkleAirDropper>,
+    pub merkle_air_dropper: Account<'info, MerkleAirDropper>,
     #[account(
     mut,
     token::mint = mint,
-    token::authority = distributor,
-    seeds = [b"MerkleDistributor".as_ref(), distributor.key().as_ref()],
+    token::authority = merkle_air_dropper,
+    seeds = [MerkleAirDropper::SEED.as_bytes(), merkle_air_dropper.key().as_ref()],
     bump
     )]
-    pub distributor_token_account: Box<Account<'info, TokenAccount>>,
-    /// Status of the claim.
+    pub merkle_air_dropper_token_account: Box<Account<'info, TokenAccount>>,
     #[account(
     init,
     seeds = [
-    b"ClaimAirDropStatus".as_ref(),
-    distributor.key().as_ref(),
+    ClaimAirDropStatus::SEED.as_bytes(),
+    merkle_air_dropper.key().as_ref(),
     claimant.key().as_ref(),
     ],
     space = ClaimAirDropStatus::LEN,
     payer = claimant,
     bump,
     )]
-    pub claim_status: Account<'info, ClaimAirDropStatus>,
-    /// The [System] program.
+    pub claim_air_drop_status: Account<'info, ClaimAirDropStatus>,
     pub system_program: Program<'info, System>,
-    /// SPL [Token] program.
     pub token_program: Program<'info, Token>,
-    /// Token [Mint].
     pub mint: Box<Account<'info, Mint>>,
-    /// The [Associated Token] program.
     pub associated_token_program: Program<'info, AssociatedToken>,
     pub rent: Sysvar<'info, Rent>,
 }
@@ -72,19 +66,18 @@ pub struct ClaimAirDrop<'info> {
 pub fn claim_air_drop(ctx: Context<ClaimAirDrop>, args: ClaimAirDropArgs) -> Result<()> {
     let clock = Clock::get()?;
     let mint = &ctx.accounts.mint;
-    let claim_status = &mut ctx.accounts.claim_status;
+    let claim_air_drop_status = &mut ctx.accounts.claim_air_drop_status;
     let claimant = &ctx.accounts.claimant;
     let claimant_token_account = &ctx.accounts.claimant_token_account;
-    let distributor_token_account = &ctx.accounts.distributor_token_account;
+    let merkle_air_dropper_token_account = &ctx.accounts.merkle_air_dropper_token_account;
     let token_program = &ctx.accounts.token_program;
-    let distributor = &mut ctx.accounts.distributor;
+    let merkle_air_dropper = &mut ctx.accounts.merkle_air_dropper;
     require!(
-        // This check is redundant, we should not be able to initialize a claim status account at the same key.
-        !claim_status.is_claimed && claim_status.claimed_at == 0,
+        !claim_air_drop_status.is_claimed && claim_air_drop_status.claimed_at == 0,
         ErrorCode::DropAlreadyClaimed
     );
     require!(claimant.is_signer, ErrorCode::Unauthorized);
-    let merkle_root = distributor.merkle_root;
+    let merkle_root = merkle_air_dropper.merkle_root;
     let proof_bytes = args.proof;
     let proof = MerkleProof::<Sha256>::try_from(proof_bytes.clone())
         .map_err(|_| ErrorCode::InvalidProof)?;
@@ -101,7 +94,7 @@ pub fn claim_air_drop(ctx: Context<ClaimAirDrop>, args: ClaimAirDropArgs) -> Res
             merkle_root,
             &indices_to_prove,
             leaves_to_prove,
-            distributor.leaves_len as usize,
+            merkle_air_dropper.leaves_len as usize,
         ),
         ErrorCode::InvalidProof
     );
@@ -117,50 +110,49 @@ pub fn claim_air_drop(ctx: Context<ClaimAirDrop>, args: ClaimAirDropArgs) -> Res
     let inner_leaf = leaves_to_prove[0];
     require!(leaf == inner_leaf, ErrorCode::CannotValidateProof);
 
-    // Mark it claimed and send the tokens.
-    claim_status.bump = ctx.bumps.claim_status;
-    claim_status.amount = args.amount;
-    claim_status.is_claimed = true;
-    claim_status.mint = mint.key();
-    claim_status.claimed_at = clock.unix_timestamp;
-    claim_status.claimant = claimant.key();
-    claim_status.distributor = distributor.key();
+    claim_air_drop_status.bump = ctx.bumps.claim_air_drop_status;
+    claim_air_drop_status.amount = args.amount;
+    claim_air_drop_status.is_claimed = true;
+    claim_air_drop_status.mint = mint.key();
+    claim_air_drop_status.claimed_at = clock.unix_timestamp;
+    claim_air_drop_status.claimant = claimant.key();
+    claim_air_drop_status.merkle_air_dropper = merkle_air_dropper.key();
 
     let mint_key = mint.key();
     let seeds = &[
-        b"MerkleDistributor".as_ref(),
+        MerkleAirDropper::SEED.as_ref(),
         mint_key.as_ref(),
-        &[distributor.bump],
+        &[merkle_air_dropper.bump],
     ];
     transfer_token_pda(
-        distributor_token_account.to_account_info(),
+        merkle_air_dropper_token_account.to_account_info(),
         claimant_token_account.to_account_info(),
         token_program.to_account_info(),
-        distributor.to_account_info(),
+        merkle_air_dropper.to_account_info(),
         args.amount,
         &[seeds],
     )?;
-    distributor.total_amount_claimed = distributor
+    merkle_air_dropper.total_amount_claimed = merkle_air_dropper
         .total_amount_claimed
         .checked_add(args.amount)
         .ok_or(ErrorCode::BadMath)?;
     require!(
-        distributor.total_amount_claimed <= distributor.max_total_claim,
+        merkle_air_dropper.total_amount_claimed <= merkle_air_dropper.max_total_claim,
         ErrorCode::ExceededMaxClaim
     );
-    distributor.num_nodes_claimed = distributor
+    merkle_air_dropper.num_nodes_claimed = merkle_air_dropper
         .num_nodes_claimed
         .checked_add(1)
         .ok_or(ErrorCode::BadMath)?;
     require!(
-        distributor.num_nodes_claimed <= distributor.max_num_nodes,
+        merkle_air_dropper.num_nodes_claimed <= merkle_air_dropper.max_num_nodes,
         ErrorCode::ExceededMaxNumNodes
     );
     emit!(ClaimedAirDropEvent {
         index: args.index,
         claimant: claimant.key(),
         mint: mint.key(),
-        distributor: distributor.key(),
+        merkle_air_dropper: merkle_air_dropper.key(),
         amount: args.amount
     });
     Ok(())
