@@ -10,7 +10,7 @@ pub mod utils;
 
 pub use instructions::*;
 
-declare_id!("J5qyvFxq8JprXYyo4n5qGZ8cYuCZUKi6wEzuSmDTPEgB");
+declare_id!("6yGnfw6ahHDQXequrUaQNv6UxbdmceQYGvZUtFDFrHqR");
 
 #[program]
 pub mod merkle_air_dropper {

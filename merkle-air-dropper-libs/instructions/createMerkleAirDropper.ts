@@ -80,7 +80,7 @@ export const createMerkleAirDropperInstructionDiscriminator = [
 export function createCreateMerkleAirDropperInstruction(
   accounts: CreateMerkleAirDropperInstructionAccounts,
   args: CreateMerkleAirDropperInstructionArgs,
-  programId = new web3.PublicKey('J5qyvFxq8JprXYyo4n5qGZ8cYuCZUKi6wEzuSmDTPEgB')
+  programId = new web3.PublicKey('6yGnfw6ahHDQXequrUaQNv6UxbdmceQYGvZUtFDFrHqR')
 ) {
   const [data] = createMerkleAirDropperStruct.serialize({
     instructionDiscriminator: createMerkleAirDropperInstructionDiscriminator,

@@ -112,7 +112,7 @@ export class MerkleAirDropper implements MerkleAirDropperArgs {
    */
   static gpaBuilder(
     programId: web3.PublicKey = new web3.PublicKey(
-      'J5qyvFxq8JprXYyo4n5qGZ8cYuCZUKi6wEzuSmDTPEgB'
+      '6yGnfw6ahHDQXequrUaQNv6UxbdmceQYGvZUtFDFrHqR'
     )
   ) {
     return beetSolana.GpaBuilder.fromStruct(programId, merkleAirDropperBeet)

@@ -82,7 +82,7 @@ export const claimAirDropInstructionDiscriminator = [
 export function createClaimAirDropInstruction(
   accounts: ClaimAirDropInstructionAccounts,
   args: ClaimAirDropInstructionArgs,
-  programId = new web3.PublicKey('J5qyvFxq8JprXYyo4n5qGZ8cYuCZUKi6wEzuSmDTPEgB')
+  programId = new web3.PublicKey('6yGnfw6ahHDQXequrUaQNv6UxbdmceQYGvZUtFDFrHqR')
 ) {
   const [data] = claimAirDropStruct.serialize({
     instructionDiscriminator: claimAirDropInstructionDiscriminator,
