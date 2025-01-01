@@ -20,7 +20,7 @@ where
     D: Deserializer<'de>,
 {
     let s: &str = Deserialize::deserialize(deserializer)?;
-    Ok(Pubkey::from_str(s).map_err(Error::custom)?)
+    Pubkey::from_str(s).map_err(Error::custom)
 }
 
 impl Claimant {
