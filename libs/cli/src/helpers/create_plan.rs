@@ -6,7 +6,7 @@ use rs_merkle::{Hasher, MerkleProof, MerkleTree};
 pub fn create_plan(leaf_values: Vec<Claimant>) -> MerkleOutput {
     let leaves: Vec<[u8; 32]> = leaf_values
         .iter()
-        .map(|x| Sha256::hash(&*x.as_bytes()))
+        .map(|x| Sha256::hash(&x.as_bytes()))
         .collect();
     let merkle_tree = MerkleTree::<Sha256>::from_leaves(&leaves);
     let mut merkle_output = MerkleOutput {

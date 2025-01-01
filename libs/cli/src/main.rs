@@ -16,28 +16,26 @@ pub struct CliArgs {
     pub input_plan: String,
     #[arg(long)]
     pub output_merkle: String,
+    #[arg(long, default_value = "false")]
+    pub force: bool,
 }
 
 #[tokio::main]
 async fn main() -> anyhow::Result<ExitCode> {
     let args = CliArgs::parse();
 
-    match fs::metadata(&args.input_plan) {
-        Ok(_) => {}
-        Err(_) => {
-            let msg = format!("The file '{}' does not exist.", args.input_plan);
-            eprintln!("{}", msg.red());
-            return Err(anyhow!(msg));
-        }
+    if let Err(error) = fs::metadata(&args.input_plan) {
+        let msg = format!("Error regarding {} | {}", args.input_plan, error);
+        eprintln!("{}", msg.red());
+        return Err(anyhow!(msg));
     }
 
-    match fs::metadata(&args.output_merkle) {
-        Ok(_) => {
+    if let Ok(_) = fs::metadata(&args.output_merkle) {
+        if !args.force {
             let msg = format!("The file '{}' already exist.", args.output_merkle);
             eprintln!("{}", msg.red());
             return Err(anyhow!(msg));
         }
-        Err(_) => {}
     }
     let leaf_values = read_air_dropper_plan_from_file(&args.input_plan);
     let merkle_output = create_plan(leaf_values);
