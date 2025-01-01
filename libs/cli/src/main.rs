@@ -30,12 +30,10 @@ async fn main() -> anyhow::Result<ExitCode> {
         return Err(anyhow!(msg));
     }
 
-    if let Ok(_) = fs::metadata(&args.output_merkle) {
-        if !args.force {
-            let msg = format!("The file '{}' already exist.", args.output_merkle);
-            eprintln!("{}", msg.red());
-            return Err(anyhow!(msg));
-        }
+    if fs::metadata(&args.output_merkle).is_ok() && !args.force {
+        let msg = format!("The file '{}' already exist.", args.output_merkle);
+        eprintln!("{}", msg.red());
+        return Err(anyhow!(msg));
     }
     let leaf_values = read_air_dropper_plan_from_file(&args.input_plan);
     let merkle_output = create_plan(leaf_values);
@@ -43,7 +41,7 @@ async fn main() -> anyhow::Result<ExitCode> {
     println!(
         "{}",
         format!(
-            "Successfully read {} and wrote plan to {}",
+            "Successfully read '{}' and wrote plan to '{}'",
             args.input_plan, args.output_merkle
         )
         .green()
