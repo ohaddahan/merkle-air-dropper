@@ -14,7 +14,7 @@ import {
     MerkleOutput,
     processTransaction
 } from "../merkle-air-dropper-helpers/helpers";
-import {MerkleAirDropper} from "../merkle-air-dropper-libs";
+import {MerkleAirDropper} from '../target/types/merkle_air_dropper'
 
 
 export let merkle_json: MerkleOutput = null
