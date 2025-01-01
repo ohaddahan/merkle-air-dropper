@@ -43,10 +43,12 @@ pub fn read_keys_from_dir(path: &str) -> Vec<Keypair> {
 pub fn write_merkle_to_file(file_path: &str, merkle_output: MerkleOutput) {
     let cwd = env::current_dir().unwrap();
     let full_path = format!("{}/{}", cwd.to_str().unwrap_or_default(), file_path);
-    let mut file = File::create(full_path.clone()).expect(&format!(
-        "[write_merkle_to_file]::Failed to write file = {}",
-        full_path
-    ));
+    let mut file = File::create(full_path.clone()).unwrap_or_else(|_| {
+        panic!(
+            "[write_merkle_to_file]::Failed to write file = {}",
+            full_path
+        )
+    });
     let merkle_str = serde_json::to_string_pretty(&merkle_output).unwrap();
     file.write_all(merkle_str.as_bytes()).unwrap();
 }
