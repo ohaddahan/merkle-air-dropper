@@ -23,10 +23,9 @@ pub fn read_keys_from_dir(path: &str) -> Vec<Keypair> {
     let cwd = env::current_dir().unwrap();
     let full_path = format!("{}/{}", cwd.to_str().unwrap_or_default(), path);
     let mut keys: Vec<Keypair> = Vec::new();
-    for entry in fs::read_dir(full_path.clone()).expect(&format!(
-        "[read_keys_from_dir] Failed to read file = {}",
-        full_path
-    )) {
+    for entry in fs::read_dir(full_path.clone())
+        .unwrap_or_else(|_| panic!("[read_keys_from_dir] Failed to read file = {}", full_path))
+    {
         let entry = entry.unwrap();
         let path = entry.path();
         if path.is_file() {
