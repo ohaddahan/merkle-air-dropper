@@ -56,10 +56,12 @@ pub fn write_merkle_to_file(file_path: &str, merkle_output: MerkleOutput) {
 pub fn read_merkle_from_file(file_path: &str) -> MerkleOutput {
     let cwd = env::current_dir().unwrap();
     let full_path = format!("{}/{}", cwd.to_str().unwrap_or_default(), file_path);
-    let file_content = fs::read_to_string(full_path.clone()).expect(&format!(
-        "[read_merkle_from_file]::Failed to read the file = {}",
-        full_path
-    ));
+    let file_content = fs::read_to_string(full_path.clone()).unwrap_or_else(|_| {
+        panic!(
+            "[read_merkle_from_file]::Failed to read the file = {}",
+            full_path
+        )
+    });
     let merkle: MerkleOutput =
         serde_json::from_str(&file_content).expect("Failed to deserialize JSON");
     merkle
