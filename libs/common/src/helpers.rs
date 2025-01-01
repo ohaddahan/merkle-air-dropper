@@ -5,14 +5,21 @@ use anchor_lang::{AnchorDeserialize, AnchorSerialize};
 use rs_merkle::algorithms::Sha256;
 use rs_merkle::Hasher;
 use serde::de::Error;
-use serde::{Deserialize, Deserializer, Serialize};
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use std::str::FromStr;
 
 #[derive(Debug, Deserialize, Serialize, Clone, AnchorDeserialize, AnchorSerialize)]
 pub struct Claimant {
-    #[serde(deserialize_with = "from_str")]
+    #[serde(deserialize_with = "from_str", serialize_with = "to_str")]
     pub claimant: Pubkey,
     pub amount: u64,
+}
+
+pub fn to_str<S>(pubkey: &Pubkey, serializer: S) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+    serializer.serialize_str(&pubkey.to_string())
 }
 
 fn from_str<'de, D>(deserializer: D) -> Result<Pubkey, D::Error>
