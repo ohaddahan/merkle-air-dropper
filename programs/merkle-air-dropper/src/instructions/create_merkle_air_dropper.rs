@@ -1,3 +1,4 @@
+use crate::events::merkle_air_dropper_event::MerkleAirDropperEvent;
 use crate::state::merkle_air_dropper::MerkleAirDropper;
 use crate::utils::transfer_token;
 use anchor_lang::prelude::*;
@@ -75,5 +76,17 @@ pub fn create_merkle_air_dropper(
         signer.to_account_info(),
         args.max_total_claim,
     )?;
+    emit!(MerkleAirDropperEvent {
+        seed: merkle_air_dropper.seed,
+        signer: merkle_air_dropper.signer.key(),
+        merkle_root: merkle_air_dropper.merkle_root,
+        mint: merkle_air_dropper.mint.key(),
+        token_account: merkle_air_dropper_token_account.key(),
+        max_total_claim: merkle_air_dropper.max_total_claim,
+        max_num_nodes: merkle_air_dropper.max_num_nodes,
+        total_amount_claimed: merkle_air_dropper.total_amount_claimed,
+        num_nodes_claimed: merkle_air_dropper.num_nodes_claimed,
+        leaves_len: merkle_air_dropper.leaves_len
+    });
     Ok(())
 }

@@ -1,5 +1,6 @@
 use crate::error::ErrorCode;
 use crate::events::claim_air_drop_event::ClaimedAirDropEvent;
+use crate::events::merkle_air_dropper_event::MerkleAirDropperEvent;
 use crate::state::claim_air_drop_status::ClaimAirDropStatus;
 use crate::state::merkle_air_dropper::MerkleAirDropper;
 use crate::utils::{transfer_token_pda, vec_to_array};
@@ -154,6 +155,18 @@ pub fn claim_air_drop(ctx: Context<ClaimAirDrop>, args: ClaimAirDropArgs) -> Res
         mint: mint.key(),
         merkle_air_dropper: merkle_air_dropper.key(),
         amount: args.amount
+    });
+    emit!(MerkleAirDropperEvent {
+        seed: merkle_air_dropper.seed,
+        signer: merkle_air_dropper.signer.key(),
+        merkle_root: merkle_air_dropper.merkle_root,
+        mint: merkle_air_dropper.mint.key(),
+        token_account: merkle_air_dropper_token_account.key(),
+        max_total_claim: merkle_air_dropper.max_total_claim,
+        max_num_nodes: merkle_air_dropper.max_num_nodes,
+        total_amount_claimed: merkle_air_dropper.total_amount_claimed,
+        num_nodes_claimed: merkle_air_dropper.num_nodes_claimed,
+        leaves_len: merkle_air_dropper.leaves_len
     });
     Ok(())
 }
