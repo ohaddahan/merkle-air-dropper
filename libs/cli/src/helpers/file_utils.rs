@@ -62,7 +62,11 @@ pub fn read_merkle_from_file(file_path: &str) -> MerkleOutput {
             full_path
         )
     });
-    let merkle: MerkleOutput =
-        serde_json::from_str(&file_content).expect("Failed to deserialize JSON");
+    let merkle: MerkleOutput = serde_json::from_str(&file_content).unwrap_or_else(|_| {
+        panic!(
+            "[read_merkle_from_file]::Failed to deserialize JSON to = {}",
+            full_path
+        )
+    });
     merkle
 }

@@ -9,107 +9,109 @@ import * as splToken from '@solana/spl-token'
 import * as beet from '@metaplex-foundation/beet'
 import * as web3 from '@solana/web3.js'
 import {
-  CreateMerkleAirDropperArgs,
-  createMerkleAirDropperArgsBeet,
-} from '../types/CreateMerkleAirDropperArgs'
+  ClaimAirDropArgs,
+  claimAirDropArgsBeet,
+} from '../types/ClaimAirDropArgs'
 
 /**
  * @category Instructions
- * @category CreateMerkleAirDropper
+ * @category ClaimAirDrop
  * @category generated
  */
-export type CreateMerkleAirDropperInstructionArgs = {
-  args: CreateMerkleAirDropperArgs
+export type ClaimAirDropInstructionArgs = {
+  args: ClaimAirDropArgs
 }
 /**
  * @category Instructions
- * @category CreateMerkleAirDropper
+ * @category ClaimAirDrop
  * @category generated
  */
-export const createMerkleAirDropperStruct = new beet.BeetArgsStruct<
-  CreateMerkleAirDropperInstructionArgs & {
+export const claimAirDropStruct = new beet.FixableBeetArgsStruct<
+  ClaimAirDropInstructionArgs & {
     instructionDiscriminator: number[] /* size: 8 */
   }
 >(
   [
     ['instructionDiscriminator', beet.uniformFixedSizeArray(beet.u8, 8)],
-    ['args', createMerkleAirDropperArgsBeet],
+    ['args', claimAirDropArgsBeet],
   ],
-  'CreateMerkleAirDropperInstructionArgs'
+  'ClaimAirDropInstructionArgs'
 )
 /**
- * Accounts required by the _createMerkleAirDropper_ instruction
+ * Accounts required by the _claimAirDrop_ instruction
  *
- * @property [_writable_, **signer**] signer
- * @property [_writable_] signerTokenAccount
- * @property [_writable_] merkleAirDropper
- * @property [_writable_] merkleAirDropperTokenAccount
+ * @property [_writable_, **signer**] claimant
+ * @property [_writable_] claimantTokenAccount
+ * @property [_writable_] merkleAirDropperSource
+ * @property [_writable_] merkleAirDropperSourceTokenAccount
+ * @property [_writable_] airDropStatus
  * @property [] mint
  * @property [] associatedTokenProgram
  * @category Instructions
- * @category CreateMerkleAirDropper
+ * @category ClaimAirDrop
  * @category generated
  */
-export type CreateMerkleAirDropperInstructionAccounts = {
-  signer: web3.PublicKey
-  signerTokenAccount: web3.PublicKey
-  merkleAirDropper: web3.PublicKey
-  merkleAirDropperTokenAccount: web3.PublicKey
-  mint: web3.PublicKey
+export type ClaimAirDropInstructionAccounts = {
+  claimant: web3.PublicKey
+  claimantTokenAccount: web3.PublicKey
+  merkleAirDropperSource: web3.PublicKey
+  merkleAirDropperSourceTokenAccount: web3.PublicKey
+  airDropStatus: web3.PublicKey
   systemProgram?: web3.PublicKey
   tokenProgram?: web3.PublicKey
+  mint: web3.PublicKey
   associatedTokenProgram: web3.PublicKey
   rent?: web3.PublicKey
   anchorRemainingAccounts?: web3.AccountMeta[]
 }
 
-export const createMerkleAirDropperInstructionDiscriminator = [
-  22, 212, 196, 45, 199, 36, 156, 100,
+export const claimAirDropInstructionDiscriminator = [
+  59, 160, 181, 88, 128, 119, 58, 53,
 ]
 
 /**
- * Creates a _CreateMerkleAirDropper_ instruction.
+ * Creates a _ClaimAirDrop_ instruction.
  *
  * @param accounts that will be accessed while the instruction is processed
  * @param args to provide as instruction data to the program
  *
  * @category Instructions
- * @category CreateMerkleAirDropper
+ * @category ClaimAirDrop
  * @category generated
  */
-export function createCreateMerkleAirDropperInstruction(
-  accounts: CreateMerkleAirDropperInstructionAccounts,
-  args: CreateMerkleAirDropperInstructionArgs,
-  programId = new web3.PublicKey('J5qyvFxq8JprXYyo4n5qGZ8cYuCZUKi6wEzuSmDTPEgB')
+export function createClaimAirDropInstruction(
+  accounts: ClaimAirDropInstructionAccounts,
+  args: ClaimAirDropInstructionArgs,
+  programId = new web3.PublicKey('6yGnfw6ahHDQXequrUaQNv6UxbdmceQYGvZUtFDFrHqR')
 ) {
-  const [data] = createMerkleAirDropperStruct.serialize({
-    instructionDiscriminator: createMerkleAirDropperInstructionDiscriminator,
+  const [data] = claimAirDropStruct.serialize({
+    instructionDiscriminator: claimAirDropInstructionDiscriminator,
     ...args,
   })
   const keys: web3.AccountMeta[] = [
     {
-      pubkey: accounts.signer,
+      pubkey: accounts.claimant,
       isWritable: true,
       isSigner: true,
     },
     {
-      pubkey: accounts.signerTokenAccount,
+      pubkey: accounts.claimantTokenAccount,
       isWritable: true,
       isSigner: false,
     },
     {
-      pubkey: accounts.merkleAirDropper,
+      pubkey: accounts.merkleAirDropperSource,
       isWritable: true,
       isSigner: false,
     },
     {
-      pubkey: accounts.merkleAirDropperTokenAccount,
+      pubkey: accounts.merkleAirDropperSourceTokenAccount,
       isWritable: true,
       isSigner: false,
     },
     {
-      pubkey: accounts.mint,
-      isWritable: false,
+      pubkey: accounts.airDropStatus,
+      isWritable: true,
       isSigner: false,
     },
     {
@@ -119,6 +121,11 @@ export function createCreateMerkleAirDropperInstruction(
     },
     {
       pubkey: accounts.tokenProgram ?? splToken.TOKEN_PROGRAM_ID,
+      isWritable: false,
+      isSigner: false,
+    },
+    {
+      pubkey: accounts.mint,
       isWritable: false,
       isSigner: false,
     },

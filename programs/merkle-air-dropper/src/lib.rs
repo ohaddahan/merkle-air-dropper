@@ -10,20 +10,20 @@ pub mod utils;
 
 pub use instructions::*;
 
-declare_id!("J5qyvFxq8JprXYyo4n5qGZ8cYuCZUKi6wEzuSmDTPEgB");
+declare_id!("6yGnfw6ahHDQXequrUaQNv6UxbdmceQYGvZUtFDFrHqR");
 
 #[program]
 pub mod merkle_air_dropper {
     use super::*;
 
     pub fn claim_air_drop(ctx: Context<ClaimAirDrop>, args: ClaimAirDropArgs) -> Result<()> {
-        claim_air_drop::claim_air_drop(ctx, args)
+        claim_air_drop_status::claim_air_drop(ctx, args)
     }
 
-    pub fn create_merkle_air_dropper(
-        ctx: Context<CreateMerkleAirDropper>,
-        args: CreateMerkleAirDropperArgs,
+    pub fn create_merkle_air_dropper_source(
+        ctx: Context<CreateMerkleAirDropperSource>,
+        args: CreateMerkleAirDropperSourceArgs,
     ) -> Result<()> {
-        create_merkle_air_dropper::create_merkle_air_dropper(ctx, args)
+        create_merkle_air_dropper_source::create_merkle_air_dropper_source(ctx, args)
     }
 }

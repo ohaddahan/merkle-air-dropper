@@ -10,11 +10,11 @@ import * as web3 from '@solana/web3.js'
 import * as beetSolana from '@metaplex-foundation/beet-solana'
 
 /**
- * Arguments used to create {@link MerkleAirDropper}
+ * Arguments used to create {@link MerkleAirDropperSource}
  * @category Accounts
  * @category generated
  */
-export type MerkleAirDropperArgs = {
+export type MerkleAirDropperSourceArgs = {
   bump: number
   seed: beet.bignum
   signer: web3.PublicKey
@@ -28,17 +28,17 @@ export type MerkleAirDropperArgs = {
   leavesLen: beet.bignum
 }
 
-export const merkleAirDropperDiscriminator = [
-  34, 133, 189, 38, 217, 39, 47, 248,
+export const merkleAirDropperSourceDiscriminator = [
+  157, 253, 195, 245, 131, 174, 254, 54,
 ]
 /**
- * Holds the data for the {@link MerkleAirDropper} Account and provides de/serialization
+ * Holds the data for the {@link MerkleAirDropperSource} Account and provides de/serialization
  * functionality for that data
  *
  * @category Accounts
  * @category generated
  */
-export class MerkleAirDropper implements MerkleAirDropperArgs {
+export class MerkleAirDropperSource implements MerkleAirDropperSourceArgs {
   private constructor(
     readonly bump: number,
     readonly seed: beet.bignum,
@@ -54,10 +54,10 @@ export class MerkleAirDropper implements MerkleAirDropperArgs {
   ) {}
 
   /**
-   * Creates a {@link MerkleAirDropper} instance from the provided args.
+   * Creates a {@link MerkleAirDropperSource} instance from the provided args.
    */
-  static fromArgs(args: MerkleAirDropperArgs) {
-    return new MerkleAirDropper(
+  static fromArgs(args: MerkleAirDropperSourceArgs) {
+    return new MerkleAirDropperSource(
       args.bump,
       args.seed,
       args.signer,
@@ -73,19 +73,19 @@ export class MerkleAirDropper implements MerkleAirDropperArgs {
   }
 
   /**
-   * Deserializes the {@link MerkleAirDropper} from the data of the provided {@link web3.AccountInfo}.
+   * Deserializes the {@link MerkleAirDropperSource} from the data of the provided {@link web3.AccountInfo}.
    * @returns a tuple of the account data and the offset up to which the buffer was read to obtain it.
    */
   static fromAccountInfo(
     accountInfo: web3.AccountInfo<Buffer>,
     offset = 0
-  ): [MerkleAirDropper, number] {
-    return MerkleAirDropper.deserialize(accountInfo.data, offset)
+  ): [MerkleAirDropperSource, number] {
+    return MerkleAirDropperSource.deserialize(accountInfo.data, offset)
   }
 
   /**
    * Retrieves the account info from the provided address and deserializes
-   * the {@link MerkleAirDropper} from its data.
+   * the {@link MerkleAirDropperSource} from its data.
    *
    * @throws Error if no account info is found at the address or if deserialization fails
    */
@@ -93,15 +93,17 @@ export class MerkleAirDropper implements MerkleAirDropperArgs {
     connection: web3.Connection,
     address: web3.PublicKey,
     commitmentOrConfig?: web3.Commitment | web3.GetAccountInfoConfig
-  ): Promise<MerkleAirDropper> {
+  ): Promise<MerkleAirDropperSource> {
     const accountInfo = await connection.getAccountInfo(
       address,
       commitmentOrConfig
     )
     if (accountInfo == null) {
-      throw new Error(`Unable to find MerkleAirDropper account at ${address}`)
+      throw new Error(
+        `Unable to find MerkleAirDropperSource account at ${address}`
+      )
     }
-    return MerkleAirDropper.fromAccountInfo(accountInfo, 0)[0]
+    return MerkleAirDropperSource.fromAccountInfo(accountInfo, 0)[0]
   }
 
   /**
@@ -112,42 +114,48 @@ export class MerkleAirDropper implements MerkleAirDropperArgs {
    */
   static gpaBuilder(
     programId: web3.PublicKey = new web3.PublicKey(
-      'J5qyvFxq8JprXYyo4n5qGZ8cYuCZUKi6wEzuSmDTPEgB'
+      '6yGnfw6ahHDQXequrUaQNv6UxbdmceQYGvZUtFDFrHqR'
     )
   ) {
-    return beetSolana.GpaBuilder.fromStruct(programId, merkleAirDropperBeet)
+    return beetSolana.GpaBuilder.fromStruct(
+      programId,
+      merkleAirDropperSourceBeet
+    )
   }
 
   /**
-   * Deserializes the {@link MerkleAirDropper} from the provided data Buffer.
+   * Deserializes the {@link MerkleAirDropperSource} from the provided data Buffer.
    * @returns a tuple of the account data and the offset up to which the buffer was read to obtain it.
    */
-  static deserialize(buf: Buffer, offset = 0): [MerkleAirDropper, number] {
-    return merkleAirDropperBeet.deserialize(buf, offset)
+  static deserialize(
+    buf: Buffer,
+    offset = 0
+  ): [MerkleAirDropperSource, number] {
+    return merkleAirDropperSourceBeet.deserialize(buf, offset)
   }
 
   /**
-   * Serializes the {@link MerkleAirDropper} into a Buffer.
+   * Serializes the {@link MerkleAirDropperSource} into a Buffer.
    * @returns a tuple of the created Buffer and the offset up to which the buffer was written to store it.
    */
   serialize(): [Buffer, number] {
-    return merkleAirDropperBeet.serialize({
-      accountDiscriminator: merkleAirDropperDiscriminator,
+    return merkleAirDropperSourceBeet.serialize({
+      accountDiscriminator: merkleAirDropperSourceDiscriminator,
       ...this,
     })
   }
 
   /**
    * Returns the byteSize of a {@link Buffer} holding the serialized data of
-   * {@link MerkleAirDropper}
+   * {@link MerkleAirDropperSource}
    */
   static get byteSize() {
-    return merkleAirDropperBeet.byteSize
+    return merkleAirDropperSourceBeet.byteSize
   }
 
   /**
    * Fetches the minimum balance needed to exempt an account holding
-   * {@link MerkleAirDropper} data from rent
+   * {@link MerkleAirDropperSource} data from rent
    *
    * @param connection used to retrieve the rent exemption information
    */
@@ -156,21 +164,21 @@ export class MerkleAirDropper implements MerkleAirDropperArgs {
     commitment?: web3.Commitment
   ): Promise<number> {
     return connection.getMinimumBalanceForRentExemption(
-      MerkleAirDropper.byteSize,
+      MerkleAirDropperSource.byteSize,
       commitment
     )
   }
 
   /**
    * Determines if the provided {@link Buffer} has the correct byte size to
-   * hold {@link MerkleAirDropper} data.
+   * hold {@link MerkleAirDropperSource} data.
    */
   static hasCorrectByteSize(buf: Buffer, offset = 0) {
-    return buf.byteLength - offset === MerkleAirDropper.byteSize
+    return buf.byteLength - offset === MerkleAirDropperSource.byteSize
   }
 
   /**
-   * Returns a readable version of {@link MerkleAirDropper} properties
+   * Returns a readable version of {@link MerkleAirDropperSource} properties
    * and can be used to convert to JSON and/or logging
    */
   pretty() {
@@ -254,9 +262,9 @@ export class MerkleAirDropper implements MerkleAirDropperArgs {
  * @category Accounts
  * @category generated
  */
-export const merkleAirDropperBeet = new beet.BeetStruct<
-  MerkleAirDropper,
-  MerkleAirDropperArgs & {
+export const merkleAirDropperSourceBeet = new beet.BeetStruct<
+  MerkleAirDropperSource,
+  MerkleAirDropperSourceArgs & {
     accountDiscriminator: number[] /* size: 8 */
   }
 >(
@@ -274,6 +282,6 @@ export const merkleAirDropperBeet = new beet.BeetStruct<
     ['numNodesClaimed', beet.u64],
     ['leavesLen', beet.u64],
   ],
-  MerkleAirDropper.fromArgs,
-  'MerkleAirDropper'
+  MerkleAirDropperSource.fromArgs,
+  'MerkleAirDropperSource'
 )
