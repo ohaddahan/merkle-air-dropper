@@ -12,7 +12,7 @@ import {
     airdrop,
     getOrCreateTokenAccountInstruction,
     MerkleOutput,
-    processTransaction
+    processTransaction, walletMap
 } from "../merkle-air-dropper-helpers/helpers";
 import {MerkleAirDropper} from '../target/types/merkle_air_dropper'
 
@@ -40,7 +40,9 @@ describe('0-prep', () => {
     })
 
     it('Airdrops', async () => {
-        for (const key of [...users, admin]) {
+        const claimants = Array.from(walletMap().values());
+
+        for (const key of [...users, admin, ...claimants]) {
             await airdrop(program, key.publicKey, LAMPORTS_PER_SOL * 50_000)
         }
     })
