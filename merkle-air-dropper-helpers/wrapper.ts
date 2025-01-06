@@ -5,13 +5,17 @@ import {
 } from '@solana/spl-token'
 import {
     ClaimAirDropInstructionAccounts,
-    ClaimAirDropInstructionArgs, createClaimAirDropInstruction,
-    createCreateMerkleAirDropperInstruction,
-    CreateMerkleAirDropperArgs,
-    CreateMerkleAirDropperInstructionAccounts,
-    CreateMerkleAirDropperInstructionArgs
+    ClaimAirDropInstructionArgs,
+    createClaimAirDropInstruction,
+    createCreateMerkleAirDropperSourceInstruction,
+    CreateMerkleAirDropperSourceInstructionAccounts,
+    CreateMerkleAirDropperSourceInstructionArgs
 } from "../merkle-air-dropper-libs";
-import {getClaimAirDropStatusAccountAddress, getDistributorTokenAccount, getMerkleAirDropperAddress} from "./pda";
+import {
+    getClaimAirDropStatusAccountAddress,
+    getMerkleAirDropperSourceAddress,
+    getMerkleAirDropperTokenAccount
+} from "./pda";
 
 
 export function createCreateMerkleAirDropperTransactionInstruction(
@@ -24,7 +28,7 @@ export function createCreateMerkleAirDropperTransactionInstruction(
     leavesLen: number
 ): TransactionInstruction {
 
-    const args: CreateMerkleAirDropperInstructionArgs = {
+    const args: CreateMerkleAirDropperSourceInstructionArgs = {
         args: {
             seed,
             merkleRoot,
@@ -35,19 +39,19 @@ export function createCreateMerkleAirDropperTransactionInstruction(
     }
 
     const signerTokenAccount = getAssociatedTokenAddressSync(mint, signer)
-    const [merkleAirDropper] = getMerkleAirDropperAddress(mint, seed);
-    const [merkleAirDropperTokenAccount] = getDistributorTokenAccount(mint, seed)
+    const [merkleAirDropperSource] = getMerkleAirDropperSourceAddress(mint, seed);
+    const [merkleAirDropperSourceTokenAccount] = getMerkleAirDropperTokenAccount(mint, seed)
 
-    const accounts: CreateMerkleAirDropperInstructionAccounts = {
+    const accounts: CreateMerkleAirDropperSourceInstructionAccounts = {
         signer,
         signerTokenAccount,
-        merkleAirDropper,
-        merkleAirDropperTokenAccount,
+        merkleAirDropperSource,
+        merkleAirDropperSourceTokenAccount,
         mint,
         associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID
     }
 
-    return createCreateMerkleAirDropperInstruction(accounts, args)
+    return createCreateMerkleAirDropperSourceInstruction(accounts, args)
 }
 
 export function createClaimAirDropTransactionInstruction(
@@ -71,15 +75,15 @@ export function createClaimAirDropTransactionInstruction(
 
     const claimant = signer
     const claimantTokenAccount = getAssociatedTokenAddressSync(mint, signer)
-    const [merkleAirDropper] = getMerkleAirDropperAddress(mint, seed);
-    const [merkleAirDropperTokenAccount] = getDistributorTokenAccount(mint, seed)
+    const [merkleAirDropperSource] = getMerkleAirDropperSourceAddress(mint, seed);
+    const [merkleAirDropperSourceTokenAccount] = getMerkleAirDropperTokenAccount(mint, seed)
     const [claimAirDropStatus] = getClaimAirDropStatusAccountAddress(mint, claimant)
 
     const accounts: ClaimAirDropInstructionAccounts = {
         claimant,
         claimantTokenAccount,
-        merkleAirDropper,
-        merkleAirDropperTokenAccount,
+        merkleAirDropperSource,
+        merkleAirDropperSourceTokenAccount,
         associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
         mint,
         claimAirDropStatus

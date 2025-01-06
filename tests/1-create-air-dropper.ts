@@ -7,10 +7,9 @@ import {MerkleOutput, processTransaction} from "../merkle-air-dropper-helpers/he
 import {admin, mint} from "./0-prep";
 import {createCreateMerkleAirDropperTransactionInstruction} from "../merkle-air-dropper-helpers/wrapper";
 import {
-    getMerkleAirDropperAccount,
+    getMerkleAirDropperSourceAccount,
 } from "../merkle-air-dropper-helpers/pda";
 import {MerkleAirDropper} from '../target/types/merkle_air_dropper'
-
 
 export let merkle_json: MerkleOutput = null
 
@@ -21,11 +20,13 @@ describe('1-create-air-dropper', () => {
 
     const program = anchor.workspace.MerkleAirDropper as Program<MerkleAirDropper>
 
-    it('create distributor', async () => {
+    it('create-air-dropper', async () => {
         const cwd = process.cwd()
         const merkle_file = fs.readFileSync(`${cwd}/tests-fixtures/plan/merkle.json`).toString()
         merkle_json = JSON.parse(merkle_file)
-        const instruction = createCreateMerkleAirDropperTransactionInstruction(1, merkle_json.root,
+        const instruction = createCreateMerkleAirDropperTransactionInstruction(
+            1,
+            merkle_json.root,
             LAMPORTS_PER_SOL * 1_000,
             12,
             admin.publicKey,
@@ -47,7 +48,7 @@ describe('1-create-air-dropper', () => {
             `${mint.toBase58()}\n${txn?.meta?.logMessages.join('\n')}`
         )
 
-        const merkleAirDropper = await getMerkleAirDropperAccount(program.provider.connection, mint, 1)
-        assert(merkleAirDropper.pretty().maxTotalClaim === LAMPORTS_PER_SOL * 1_000)
+        const merkleAirDropperSource = await getMerkleAirDropperSourceAccount(program.provider.connection, mint, 1)
+        assert(merkleAirDropperSource.pretty().maxTotalClaim === LAMPORTS_PER_SOL * 1_000)
     })
 })

@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 
 #[event]
-pub struct ClaimedAirDropEvent {
+pub struct AirDropEvent {
     pub index: u64,
     pub claimant: Pubkey,
     pub mint: Pubkey,

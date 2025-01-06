@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 
 #[account]
 #[derive(Default)]
-pub struct ClaimAirDropStatus {
+pub struct AirDropStatus {
     pub bump: u8,
     pub is_claimed: bool,
     pub claimant: Pubkey,
@@ -12,7 +12,7 @@ pub struct ClaimAirDropStatus {
     pub amount: u64,
 }
 
-impl ClaimAirDropStatus {
+impl AirDropStatus {
     pub const LEN: usize = 500;
-    pub const SEED: &'static str = "ClaimAirDropStatus";
+    pub const SEED: &'static str = "AirDropStatus";
 }

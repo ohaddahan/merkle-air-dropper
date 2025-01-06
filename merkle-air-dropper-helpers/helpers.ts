@@ -246,8 +246,8 @@ export function generateHashInput(game: PublicKey, length: number): Hash {
 export function walletMap(): Map<string, Keypair> {
     const cwd = process.cwd()
     const map = new Map<string, Keypair>()
-    for (let i = 1; i <= 12; i++) {
-        let key = loadWalletKey(`${cwd}/programs/merkle-distributor/test-keys/${i}.json`)
+    for (let i = 0; i < 12; i++) {
+        let key = loadWalletKey(`${cwd}/tests-fixtures/keys/${i}.json`)
         map.set(key.publicKey.toBase58(), key)
     }
     return map
@@ -255,8 +255,10 @@ export function walletMap(): Map<string, Keypair> {
 
 export function findDataInMerkle(pubkey: PublicKey, merkle: MerkleOutput): Leaf | null {
     for (const leaf of merkle.leafs) {
-        const uint8Array = new Uint8Array(leaf.claimant.claimant)
-        const pub = new PublicKey(uint8Array)
+        // console.log("type", typeof leaf.claimant.claimant)
+        // const uint8Array = new Uint8Array(leaf.claimant.claimant)
+        // const pub = new PublicKey(uint8Array)
+        const pub = new PublicKey(leaf.claimant.claimant)
         if (pub.toBase58() === pubkey.toBase58()) {
             return leaf
         }

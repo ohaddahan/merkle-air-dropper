@@ -1,2 +1,2 @@
 export * from './claimAirDrop'
-export * from './createMerkleAirDropper'
+export * from './createMerkleAirDropperSource'

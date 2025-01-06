@@ -10,11 +10,11 @@ import * as beet from '@metaplex-foundation/beet'
 import * as beetSolana from '@metaplex-foundation/beet-solana'
 
 /**
- * Arguments used to create {@link ClaimAirDropStatus}
+ * Arguments used to create {@link AirDropStatus}
  * @category Accounts
  * @category generated
  */
-export type ClaimAirDropStatusArgs = {
+export type AirDropStatusArgs = {
   bump: number
   isClaimed: boolean
   claimant: web3.PublicKey
@@ -24,17 +24,15 @@ export type ClaimAirDropStatusArgs = {
   amount: beet.bignum
 }
 
-export const claimAirDropStatusDiscriminator = [
-  110, 134, 151, 44, 209, 90, 249, 144,
-]
+export const airDropStatusDiscriminator = [207, 179, 91, 45, 210, 84, 85, 183]
 /**
- * Holds the data for the {@link ClaimAirDropStatus} Account and provides de/serialization
+ * Holds the data for the {@link AirDropStatus} Account and provides de/serialization
  * functionality for that data
  *
  * @category Accounts
  * @category generated
  */
-export class ClaimAirDropStatus implements ClaimAirDropStatusArgs {
+export class AirDropStatus implements AirDropStatusArgs {
   private constructor(
     readonly bump: number,
     readonly isClaimed: boolean,
@@ -46,10 +44,10 @@ export class ClaimAirDropStatus implements ClaimAirDropStatusArgs {
   ) {}
 
   /**
-   * Creates a {@link ClaimAirDropStatus} instance from the provided args.
+   * Creates a {@link AirDropStatus} instance from the provided args.
    */
-  static fromArgs(args: ClaimAirDropStatusArgs) {
-    return new ClaimAirDropStatus(
+  static fromArgs(args: AirDropStatusArgs) {
+    return new AirDropStatus(
       args.bump,
       args.isClaimed,
       args.claimant,
@@ -61,19 +59,19 @@ export class ClaimAirDropStatus implements ClaimAirDropStatusArgs {
   }
 
   /**
-   * Deserializes the {@link ClaimAirDropStatus} from the data of the provided {@link web3.AccountInfo}.
+   * Deserializes the {@link AirDropStatus} from the data of the provided {@link web3.AccountInfo}.
    * @returns a tuple of the account data and the offset up to which the buffer was read to obtain it.
    */
   static fromAccountInfo(
     accountInfo: web3.AccountInfo<Buffer>,
     offset = 0
-  ): [ClaimAirDropStatus, number] {
-    return ClaimAirDropStatus.deserialize(accountInfo.data, offset)
+  ): [AirDropStatus, number] {
+    return AirDropStatus.deserialize(accountInfo.data, offset)
   }
 
   /**
    * Retrieves the account info from the provided address and deserializes
-   * the {@link ClaimAirDropStatus} from its data.
+   * the {@link AirDropStatus} from its data.
    *
    * @throws Error if no account info is found at the address or if deserialization fails
    */
@@ -81,15 +79,15 @@ export class ClaimAirDropStatus implements ClaimAirDropStatusArgs {
     connection: web3.Connection,
     address: web3.PublicKey,
     commitmentOrConfig?: web3.Commitment | web3.GetAccountInfoConfig
-  ): Promise<ClaimAirDropStatus> {
+  ): Promise<AirDropStatus> {
     const accountInfo = await connection.getAccountInfo(
       address,
       commitmentOrConfig
     )
     if (accountInfo == null) {
-      throw new Error(`Unable to find ClaimAirDropStatus account at ${address}`)
+      throw new Error(`Unable to find AirDropStatus account at ${address}`)
     }
-    return ClaimAirDropStatus.fromAccountInfo(accountInfo, 0)[0]
+    return AirDropStatus.fromAccountInfo(accountInfo, 0)[0]
   }
 
   /**
@@ -100,42 +98,42 @@ export class ClaimAirDropStatus implements ClaimAirDropStatusArgs {
    */
   static gpaBuilder(
     programId: web3.PublicKey = new web3.PublicKey(
-      'J5qyvFxq8JprXYyo4n5qGZ8cYuCZUKi6wEzuSmDTPEgB'
+      '6yGnfw6ahHDQXequrUaQNv6UxbdmceQYGvZUtFDFrHqR'
     )
   ) {
-    return beetSolana.GpaBuilder.fromStruct(programId, claimAirDropStatusBeet)
+    return beetSolana.GpaBuilder.fromStruct(programId, airDropStatusBeet)
   }
 
   /**
-   * Deserializes the {@link ClaimAirDropStatus} from the provided data Buffer.
+   * Deserializes the {@link AirDropStatus} from the provided data Buffer.
    * @returns a tuple of the account data and the offset up to which the buffer was read to obtain it.
    */
-  static deserialize(buf: Buffer, offset = 0): [ClaimAirDropStatus, number] {
-    return claimAirDropStatusBeet.deserialize(buf, offset)
+  static deserialize(buf: Buffer, offset = 0): [AirDropStatus, number] {
+    return airDropStatusBeet.deserialize(buf, offset)
   }
 
   /**
-   * Serializes the {@link ClaimAirDropStatus} into a Buffer.
+   * Serializes the {@link AirDropStatus} into a Buffer.
    * @returns a tuple of the created Buffer and the offset up to which the buffer was written to store it.
    */
   serialize(): [Buffer, number] {
-    return claimAirDropStatusBeet.serialize({
-      accountDiscriminator: claimAirDropStatusDiscriminator,
+    return airDropStatusBeet.serialize({
+      accountDiscriminator: airDropStatusDiscriminator,
       ...this,
     })
   }
 
   /**
    * Returns the byteSize of a {@link Buffer} holding the serialized data of
-   * {@link ClaimAirDropStatus}
+   * {@link AirDropStatus}
    */
   static get byteSize() {
-    return claimAirDropStatusBeet.byteSize
+    return airDropStatusBeet.byteSize
   }
 
   /**
    * Fetches the minimum balance needed to exempt an account holding
-   * {@link ClaimAirDropStatus} data from rent
+   * {@link AirDropStatus} data from rent
    *
    * @param connection used to retrieve the rent exemption information
    */
@@ -144,21 +142,21 @@ export class ClaimAirDropStatus implements ClaimAirDropStatusArgs {
     commitment?: web3.Commitment
   ): Promise<number> {
     return connection.getMinimumBalanceForRentExemption(
-      ClaimAirDropStatus.byteSize,
+      AirDropStatus.byteSize,
       commitment
     )
   }
 
   /**
    * Determines if the provided {@link Buffer} has the correct byte size to
-   * hold {@link ClaimAirDropStatus} data.
+   * hold {@link AirDropStatus} data.
    */
   static hasCorrectByteSize(buf: Buffer, offset = 0) {
-    return buf.byteLength - offset === ClaimAirDropStatus.byteSize
+    return buf.byteLength - offset === AirDropStatus.byteSize
   }
 
   /**
-   * Returns a readable version of {@link ClaimAirDropStatus} properties
+   * Returns a readable version of {@link AirDropStatus} properties
    * and can be used to convert to JSON and/or logging
    */
   pretty() {
@@ -198,9 +196,9 @@ export class ClaimAirDropStatus implements ClaimAirDropStatusArgs {
  * @category Accounts
  * @category generated
  */
-export const claimAirDropStatusBeet = new beet.BeetStruct<
-  ClaimAirDropStatus,
-  ClaimAirDropStatusArgs & {
+export const airDropStatusBeet = new beet.BeetStruct<
+  AirDropStatus,
+  AirDropStatusArgs & {
     accountDiscriminator: number[] /* size: 8 */
   }
 >(
@@ -214,6 +212,6 @@ export const claimAirDropStatusBeet = new beet.BeetStruct<
     ['claimedAt', beet.i64],
     ['amount', beet.u64],
   ],
-  ClaimAirDropStatus.fromArgs,
-  'ClaimAirDropStatus'
+  AirDropStatus.fromArgs,
+  'AirDropStatus'
 )

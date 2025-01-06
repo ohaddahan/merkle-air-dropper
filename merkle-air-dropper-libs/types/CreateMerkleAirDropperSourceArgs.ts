@@ -6,7 +6,7 @@
  */
 
 import * as beet from '@metaplex-foundation/beet'
-export type CreateMerkleAirDropperArgs = {
+export type CreateMerkleAirDropperSourceArgs = {
   merkleRoot: number[] /* size: 32 */
   seed: beet.bignum
   maxTotalClaim: beet.bignum
@@ -18,8 +18,8 @@ export type CreateMerkleAirDropperArgs = {
  * @category userTypes
  * @category generated
  */
-export const createMerkleAirDropperArgsBeet =
-  new beet.BeetArgsStruct<CreateMerkleAirDropperArgs>(
+export const createMerkleAirDropperSourceArgsBeet =
+  new beet.BeetArgsStruct<CreateMerkleAirDropperSourceArgs>(
     [
       ['merkleRoot', beet.uniformFixedSizeArray(beet.u8, 32)],
       ['seed', beet.u64],
@@ -27,5 +27,5 @@ export const createMerkleAirDropperArgsBeet =
       ['maxNumNodes', beet.u64],
       ['leavesLen', beet.u64],
     ],
-    'CreateMerkleAirDropperArgs'
+    'CreateMerkleAirDropperSourceArgs'
   )

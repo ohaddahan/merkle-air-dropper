@@ -1,7 +1,7 @@
-export * from './ClaimAirDropStatus'
-export * from './MerkleAirDropper'
+export * from './AirDropStatus'
+export * from './MerkleAirDropperSource'
 
-import { ClaimAirDropStatus } from './ClaimAirDropStatus'
-import { MerkleAirDropper } from './MerkleAirDropper'
+import { AirDropStatus } from './AirDropStatus'
+import { MerkleAirDropperSource } from './MerkleAirDropperSource'
 
-export const accountProviders = { ClaimAirDropStatus, MerkleAirDropper }
+export const accountProviders = { AirDropStatus, MerkleAirDropperSource }
