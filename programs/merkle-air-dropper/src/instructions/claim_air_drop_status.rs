@@ -33,7 +33,7 @@ pub struct ClaimAirDrop<'info> {
     )]
     pub claimant_token_account: Box<Account<'info, TokenAccount>>,
     #[account(mut,
-    seeds = [MerkleAirDropperSource::SEED.as_bytes(), mint.key().as_ref()],
+    seeds = [MerkleAirDropperSource::SEED.as_bytes(), mint.key().as_ref(), &merkle_air_dropper_source.seed.to_le_bytes()],
     bump=merkle_air_dropper_source.bump
     )]
     pub merkle_air_dropper_source: Account<'info, MerkleAirDropperSource>,
@@ -56,7 +56,7 @@ pub struct ClaimAirDrop<'info> {
     payer = claimant,
     bump,
     )]
-    pub claim_air_drop_status: Account<'info, AirDropStatus>,
+    pub air_drop_status: Account<'info, AirDropStatus>,
     pub system_program: Program<'info, System>,
     pub token_program: Program<'info, Token>,
     pub mint: Box<Account<'info, Mint>>,
@@ -67,7 +67,7 @@ pub struct ClaimAirDrop<'info> {
 pub fn claim_air_drop(ctx: Context<ClaimAirDrop>, args: ClaimAirDropArgs) -> Result<()> {
     let clock = Clock::get()?;
     let mint = &ctx.accounts.mint;
-    let air_drop_status = &mut ctx.accounts.claim_air_drop_status;
+    let air_drop_status = &mut ctx.accounts.air_drop_status;
     let claimant = &ctx.accounts.claimant;
     let claimant_token_account = &ctx.accounts.claimant_token_account;
     let merkle_air_dropper_source_token_account =
@@ -79,7 +79,7 @@ pub fn claim_air_drop(ctx: Context<ClaimAirDrop>, args: ClaimAirDropArgs) -> Res
         false,
         ErrorCode::DropAlreadyClaimed
     );
-    require_neq!(air_drop_status.claimed_at, 0, ErrorCode::DropAlreadyClaimed);
+    require_eq!(air_drop_status.claimed_at, 0, ErrorCode::DropAlreadyClaimed);
     require!(claimant.is_signer, ErrorCode::Unauthorized);
     let merkle_root = merkle_air_dropper_source.merkle_root;
     let proof_bytes = args.proof;
@@ -114,7 +114,7 @@ pub fn claim_air_drop(ctx: Context<ClaimAirDrop>, args: ClaimAirDropArgs) -> Res
     let inner_leaf = leaves_to_prove[0];
     require!(leaf == inner_leaf, ErrorCode::CannotValidateProof);
 
-    air_drop_status.bump = ctx.bumps.claim_air_drop_status;
+    air_drop_status.bump = ctx.bumps.air_drop_status;
     air_drop_status.amount = args.amount;
     air_drop_status.is_claimed = true;
     air_drop_status.mint = mint.key();
@@ -123,9 +123,11 @@ pub fn claim_air_drop(ctx: Context<ClaimAirDrop>, args: ClaimAirDropArgs) -> Res
     air_drop_status.merkle_air_dropper = merkle_air_dropper_source.key();
 
     let mint_key = mint.key();
+    let seed = merkle_air_dropper_source.seed.to_le_bytes();
     let seeds = &[
         MerkleAirDropperSource::SEED.as_ref(),
         mint_key.as_ref(),
+        seed.as_ref(),
         &[merkle_air_dropper_source.bump],
     ];
     transfer_token_pda(

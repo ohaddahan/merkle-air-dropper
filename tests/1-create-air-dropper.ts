@@ -25,13 +25,15 @@ describe('1-create-air-dropper', () => {
         const merkle_file = fs.readFileSync(`${cwd}/tests-fixtures/plan/merkle.json`).toString()
         merkle_json = JSON.parse(merkle_file)
         const instruction = createCreateMerkleAirDropperTransactionInstruction(
-            1,
-            merkle_json.root,
-            LAMPORTS_PER_SOL * 1_000,
-            12,
-            admin.publicKey,
-            mint,
-            merkle_json.leafs.length
+            {
+                seed: 1,
+                merkleRoot: merkle_json.root,
+                maxTotalClaim: LAMPORTS_PER_SOL * 1_000,
+                maxNumNodes: 12,
+                signer: admin.publicKey,
+                mint,
+                leavesLen: merkle_json.leafs.length
+            }
         )
         const sig = await processTransaction(
             [instruction],
@@ -48,7 +50,11 @@ describe('1-create-air-dropper', () => {
             `${mint.toBase58()}\n${txn?.meta?.logMessages.join('\n')}`
         )
 
-        const merkleAirDropperSource = await getMerkleAirDropperSourceAccount(program.provider.connection, mint, 1)
+        const merkleAirDropperSource = await getMerkleAirDropperSourceAccount({
+            connection: program.provider.connection,
+            mint,
+            seed: 1
+        })
         assert(merkleAirDropperSource.pretty().maxTotalClaim === LAMPORTS_PER_SOL * 1_000)
     })
 })

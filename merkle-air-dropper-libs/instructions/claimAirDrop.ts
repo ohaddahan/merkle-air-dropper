@@ -44,7 +44,7 @@ export const claimAirDropStruct = new beet.FixableBeetArgsStruct<
  * @property [_writable_] claimantTokenAccount
  * @property [_writable_] merkleAirDropperSource
  * @property [_writable_] merkleAirDropperSourceTokenAccount
- * @property [_writable_] claimAirDropStatus
+ * @property [_writable_] airDropStatus
  * @property [] mint
  * @property [] associatedTokenProgram
  * @category Instructions
@@ -56,7 +56,7 @@ export type ClaimAirDropInstructionAccounts = {
   claimantTokenAccount: web3.PublicKey
   merkleAirDropperSource: web3.PublicKey
   merkleAirDropperSourceTokenAccount: web3.PublicKey
-  claimAirDropStatus: web3.PublicKey
+  airDropStatus: web3.PublicKey
   systemProgram?: web3.PublicKey
   tokenProgram?: web3.PublicKey
   mint: web3.PublicKey
@@ -110,7 +110,7 @@ export function createClaimAirDropInstruction(
       isSigner: false,
     },
     {
-      pubkey: accounts.claimAirDropStatus,
+      pubkey: accounts.airDropStatus,
       isWritable: true,
       isSigner: false,
     },
