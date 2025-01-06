@@ -1,19 +1,12 @@
 import {
+    BlockheightBasedTransactionConfirmationStrategy,
     Connection,
     Keypair,
-    Transaction,
-    TransactionInstruction,
-    SignatureResult,
     PublicKey,
-    BlockheightBasedTransactionConfirmationStrategy,
-    ParsedTransactionWithMeta
+    SignatureResult,
+    Transaction,
+    TransactionInstruction
 } from '@solana/web3.js'
-import {Program} from '@coral-xyz/anchor'
-import {
-    createAssociatedTokenAccountInstruction,
-    getAssociatedTokenAddress,
-    NATIVE_MINT
-} from '@solana/spl-token'
 import assert from 'assert'
 import keccak256 from 'keccak256'
 import fs from 'fs'
@@ -39,11 +32,10 @@ export function loadWalletKey(keypair: string): Keypair {
     if (!keypair || keypair == '') {
         throw new Error('Keypair is required!')
     }
-    const loaded = Keypair.fromSecretKey(
+    // console.log(`wallet public key: ${loaded.publicKey}`)
+    return Keypair.fromSecretKey(
         new Uint8Array(JSON.parse(fs.readFileSync(keypair).toString()))
     )
-    // console.log(`wallet public key: ${loaded.publicKey}`)
-    return loaded
 }
 
 export async function sleep(ms: number) {
@@ -56,13 +48,14 @@ export async function processAndValidateTransaction(
     signer: Keypair
 ) {
     const sig = await processTransaction(instructions, connection, signer)
-    // console.log('Transaction signature: ', sig.Signature)
+    if (!sig?.Signature) {
+        return
+    }
     const txn = await connection.getParsedTransaction(sig.Signature, 'confirmed')
-    // console.log('Transaction: ', txn)
     assert.equal(
-        sig.SignatureResult.err,
+        sig?.SignatureResult.err,
         null,
-        `${txn?.meta?.logMessages.join('\n')}\n\n${JSON.stringify(sig)}`
+        `${txn?.meta?.logMessages?.join('\n')}\n\n${JSON.stringify(sig)}`
     )
 }
 
@@ -75,9 +68,8 @@ export async function processTransaction(
     instructions: TransactionInstruction[],
     connection: Connection,
     payer: Keypair
-): Promise<TxnResult> {
+): Promise<TxnResult | undefined> {
     try {
-
         const tx = new Transaction()
         instructions.map((i) => tx.add(i))
         const blockStats = await connection.getLatestBlockhash()
@@ -103,123 +95,6 @@ export async function processTransaction(
     } catch (e) {
         console.log('processTransaction error', e)
     }
-}
-
-export async function airdrop(
-    program: Program<any>,
-    receiver: PublicKey,
-    amount: number
-) {
-    const sig = await program.provider.connection.requestAirdrop(
-        receiver,
-        amount
-    )
-    const blockStats = await program.provider.connection.getLatestBlockhash()
-    const strategy: BlockheightBasedTransactionConfirmationStrategy = {
-        signature: sig,
-        blockhash: blockStats.blockhash,
-        lastValidBlockHeight: blockStats.lastValidBlockHeight
-    }
-    await program.provider.connection.confirmTransaction(strategy, 'confirmed')
-}
-
-export async function getTxn(
-    program: Program<any>,
-    signature: string
-): Promise<ParsedTransactionWithMeta> {
-    const blockStats = await program.provider.connection.getLatestBlockhash()
-    const strategy: BlockheightBasedTransactionConfirmationStrategy = {
-        signature: signature,
-        blockhash: blockStats.blockhash,
-        lastValidBlockHeight: blockStats.lastValidBlockHeight
-    }
-    await program.provider.connection.confirmTransaction(strategy, 'confirmed')
-    return await program.provider.connection.getParsedTransaction(
-        signature,
-        'confirmed'
-    )
-}
-
-export async function verboseTxn(transaction: ParsedTransactionWithMeta) {
-    console.log(transaction.meta.logMessages.join('\n'))
-}
-
-export async function getOrCreateTokenAccountInstruction(
-    mint: PublicKey,
-    user: PublicKey,
-    connection: Connection,
-    payer: PublicKey | null = null
-): Promise<TransactionInstruction | null> {
-    const userTokenAccountAddress = await getAssociatedTokenAddress(
-        mint,
-        user,
-        false
-    )
-    const userTokenAccount = await connection.getParsedAccountInfo(
-        userTokenAccountAddress
-    )
-    if (userTokenAccount.value === null) {
-        return createAssociatedTokenAccountInstruction(
-            payer ? payer : user,
-            userTokenAccountAddress,
-            user,
-            mint
-        )
-    } else {
-        return null
-    }
-}
-
-export function generateString(length = 16) {
-    const characters =
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    let result = ''
-    const charactersLength = characters.length
-    for (let i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength))
-    }
-    return result
-}
-
-export async function getWalletBalance(
-    connection: Connection,
-    wallet: PublicKey,
-    mint: PublicKey
-): Promise<number> {
-    const balance = await connection.getBalance(wallet)
-    if (mint.toBase58() === NATIVE_MINT.toBase58()) {
-        return balance
-    } else {
-        const tokenAccount = await getAssociatedTokenAddress(mint, wallet)
-        const tokenBalance = await connection.getTokenAccountBalance(
-            tokenAccount,
-            'confirmed'
-        )
-        return parseInt(tokenBalance.value.amount)
-    }
-}
-
-export async function accountExists(
-    connection: Connection,
-    pubkey: PublicKey
-): Promise<boolean> {
-    const account_info = await connection.getAccountInfo(pubkey, 'confirmed')
-    return account_info !== null
-}
-
-export async function getTokenAccountBalance(
-    connection: Connection,
-    account: PublicKey
-): Promise<number> {
-    const account_info = await connection.getAccountInfo(account)
-    if (account_info === null) {
-        return 0
-    }
-    const tokenBalance = await connection.getTokenAccountBalance(
-        account,
-        'confirmed'
-    )
-    return parseInt(tokenBalance.value.amount)
 }
 
 export type Hash = {
