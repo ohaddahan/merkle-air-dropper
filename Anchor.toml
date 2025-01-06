@@ -11,7 +11,7 @@ seeds = false
 skip-lint = false
 
 [programs.localnet]
-merkle-air-dropper = "J5qyvFxq8JprXYyo4n5qGZ8cYuCZUKi6wEzuSmDTPEgB"
+merkle-air-dropper = "6yGnfw6ahHDQXequrUaQNv6UxbdmceQYGvZUtFDFrHqR"
 
 [registry]
 url = "https://api.apr.dev"

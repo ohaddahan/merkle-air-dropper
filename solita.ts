@@ -4,7 +4,7 @@ import {Solita} from '@metaplex-foundation/solita'
 import {writeFile, readFile} from 'fs/promises'
 
 const PROGRAM_NAME = 'merkle_air_dropper'
-const PROGRAM_ID = 'J5qyvFxq8JprXYyo4n5qGZ8cYuCZUKi6wEzuSmDTPEgB'
+const PROGRAM_ID = '6yGnfw6ahHDQXequrUaQNv6UxbdmceQYGvZUtFDFrHqR'
 const programDir = path.join('.', 'programs', 'merkle-air-dropper')
 const generatedIdlDir = path.join('.', 'target', 'idl')
 const generatedSDKDir = path.join('.', 'merkle-air-dropper-libs')

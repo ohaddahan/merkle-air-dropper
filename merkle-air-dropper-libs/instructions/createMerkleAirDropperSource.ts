@@ -9,52 +9,52 @@ import * as splToken from '@solana/spl-token'
 import * as beet from '@metaplex-foundation/beet'
 import * as web3 from '@solana/web3.js'
 import {
-  CreateMerkleAirDropperArgs,
-  createMerkleAirDropperArgsBeet,
-} from '../types/CreateMerkleAirDropperArgs'
+  CreateMerkleAirDropperSourceArgs,
+  createMerkleAirDropperSourceArgsBeet,
+} from '../types/CreateMerkleAirDropperSourceArgs'
 
 /**
  * @category Instructions
- * @category CreateMerkleAirDropper
+ * @category CreateMerkleAirDropperSource
  * @category generated
  */
-export type CreateMerkleAirDropperInstructionArgs = {
-  args: CreateMerkleAirDropperArgs
+export type CreateMerkleAirDropperSourceInstructionArgs = {
+  args: CreateMerkleAirDropperSourceArgs
 }
 /**
  * @category Instructions
- * @category CreateMerkleAirDropper
+ * @category CreateMerkleAirDropperSource
  * @category generated
  */
-export const createMerkleAirDropperStruct = new beet.BeetArgsStruct<
-  CreateMerkleAirDropperInstructionArgs & {
+export const createMerkleAirDropperSourceStruct = new beet.BeetArgsStruct<
+  CreateMerkleAirDropperSourceInstructionArgs & {
     instructionDiscriminator: number[] /* size: 8 */
   }
 >(
   [
     ['instructionDiscriminator', beet.uniformFixedSizeArray(beet.u8, 8)],
-    ['args', createMerkleAirDropperArgsBeet],
+    ['args', createMerkleAirDropperSourceArgsBeet],
   ],
-  'CreateMerkleAirDropperInstructionArgs'
+  'CreateMerkleAirDropperSourceInstructionArgs'
 )
 /**
- * Accounts required by the _createMerkleAirDropper_ instruction
+ * Accounts required by the _createMerkleAirDropperSource_ instruction
  *
  * @property [_writable_, **signer**] signer
  * @property [_writable_] signerTokenAccount
- * @property [_writable_] merkleAirDropper
- * @property [_writable_] merkleAirDropperTokenAccount
+ * @property [_writable_] merkleAirDropperSource
+ * @property [_writable_] merkleAirDropperSourceTokenAccount
  * @property [] mint
  * @property [] associatedTokenProgram
  * @category Instructions
- * @category CreateMerkleAirDropper
+ * @category CreateMerkleAirDropperSource
  * @category generated
  */
-export type CreateMerkleAirDropperInstructionAccounts = {
+export type CreateMerkleAirDropperSourceInstructionAccounts = {
   signer: web3.PublicKey
   signerTokenAccount: web3.PublicKey
-  merkleAirDropper: web3.PublicKey
-  merkleAirDropperTokenAccount: web3.PublicKey
+  merkleAirDropperSource: web3.PublicKey
+  merkleAirDropperSourceTokenAccount: web3.PublicKey
   mint: web3.PublicKey
   systemProgram?: web3.PublicKey
   tokenProgram?: web3.PublicKey
@@ -63,27 +63,28 @@ export type CreateMerkleAirDropperInstructionAccounts = {
   anchorRemainingAccounts?: web3.AccountMeta[]
 }
 
-export const createMerkleAirDropperInstructionDiscriminator = [
-  22, 212, 196, 45, 199, 36, 156, 100,
+export const createMerkleAirDropperSourceInstructionDiscriminator = [
+  8, 61, 14, 197, 54, 52, 183, 61,
 ]
 
 /**
- * Creates a _CreateMerkleAirDropper_ instruction.
+ * Creates a _CreateMerkleAirDropperSource_ instruction.
  *
  * @param accounts that will be accessed while the instruction is processed
  * @param args to provide as instruction data to the program
  *
  * @category Instructions
- * @category CreateMerkleAirDropper
+ * @category CreateMerkleAirDropperSource
  * @category generated
  */
-export function createCreateMerkleAirDropperInstruction(
-  accounts: CreateMerkleAirDropperInstructionAccounts,
-  args: CreateMerkleAirDropperInstructionArgs,
-  programId = new web3.PublicKey('J5qyvFxq8JprXYyo4n5qGZ8cYuCZUKi6wEzuSmDTPEgB')
+export function createCreateMerkleAirDropperSourceInstruction(
+  accounts: CreateMerkleAirDropperSourceInstructionAccounts,
+  args: CreateMerkleAirDropperSourceInstructionArgs,
+  programId = new web3.PublicKey('6yGnfw6ahHDQXequrUaQNv6UxbdmceQYGvZUtFDFrHqR')
 ) {
-  const [data] = createMerkleAirDropperStruct.serialize({
-    instructionDiscriminator: createMerkleAirDropperInstructionDiscriminator,
+  const [data] = createMerkleAirDropperSourceStruct.serialize({
+    instructionDiscriminator:
+      createMerkleAirDropperSourceInstructionDiscriminator,
     ...args,
   })
   const keys: web3.AccountMeta[] = [
@@ -98,12 +99,12 @@ export function createCreateMerkleAirDropperInstruction(
       isSigner: false,
     },
     {
-      pubkey: accounts.merkleAirDropper,
+      pubkey: accounts.merkleAirDropperSource,
       isWritable: true,
       isSigner: false,
     },
     {
-      pubkey: accounts.merkleAirDropperTokenAccount,
+      pubkey: accounts.merkleAirDropperSourceTokenAccount,
       isWritable: true,
       isSigner: false,
     },

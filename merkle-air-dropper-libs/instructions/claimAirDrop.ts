@@ -42,9 +42,9 @@ export const claimAirDropStruct = new beet.FixableBeetArgsStruct<
  *
  * @property [_writable_, **signer**] claimant
  * @property [_writable_] claimantTokenAccount
- * @property [_writable_] merkleAirDropper
- * @property [_writable_] merkleAirDropperTokenAccount
- * @property [_writable_] claimAirDropStatus
+ * @property [_writable_] merkleAirDropperSource
+ * @property [_writable_] merkleAirDropperSourceTokenAccount
+ * @property [_writable_] airDropStatus
  * @property [] mint
  * @property [] associatedTokenProgram
  * @category Instructions
@@ -54,9 +54,9 @@ export const claimAirDropStruct = new beet.FixableBeetArgsStruct<
 export type ClaimAirDropInstructionAccounts = {
   claimant: web3.PublicKey
   claimantTokenAccount: web3.PublicKey
-  merkleAirDropper: web3.PublicKey
-  merkleAirDropperTokenAccount: web3.PublicKey
-  claimAirDropStatus: web3.PublicKey
+  merkleAirDropperSource: web3.PublicKey
+  merkleAirDropperSourceTokenAccount: web3.PublicKey
+  airDropStatus: web3.PublicKey
   systemProgram?: web3.PublicKey
   tokenProgram?: web3.PublicKey
   mint: web3.PublicKey
@@ -82,7 +82,7 @@ export const claimAirDropInstructionDiscriminator = [
 export function createClaimAirDropInstruction(
   accounts: ClaimAirDropInstructionAccounts,
   args: ClaimAirDropInstructionArgs,
-  programId = new web3.PublicKey('J5qyvFxq8JprXYyo4n5qGZ8cYuCZUKi6wEzuSmDTPEgB')
+  programId = new web3.PublicKey('6yGnfw6ahHDQXequrUaQNv6UxbdmceQYGvZUtFDFrHqR')
 ) {
   const [data] = claimAirDropStruct.serialize({
     instructionDiscriminator: claimAirDropInstructionDiscriminator,
@@ -100,17 +100,17 @@ export function createClaimAirDropInstruction(
       isSigner: false,
     },
     {
-      pubkey: accounts.merkleAirDropper,
+      pubkey: accounts.merkleAirDropperSource,
       isWritable: true,
       isSigner: false,
     },
     {
-      pubkey: accounts.merkleAirDropperTokenAccount,
+      pubkey: accounts.merkleAirDropperSourceTokenAccount,
       isWritable: true,
       isSigner: false,
     },
     {
-      pubkey: accounts.claimAirDropStatus,
+      pubkey: accounts.airDropStatus,
       isWritable: true,
       isSigner: false,
     },
