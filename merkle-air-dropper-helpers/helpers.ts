@@ -243,11 +243,11 @@ export function generateHashInput(game: PublicKey, length: number): Hash {
     }
 }
 
-export function walletMap(): Map<string, Keypair> {
+export function walletMap(dir: string): Map<string, Keypair> {
     const cwd = process.cwd()
     const map = new Map<string, Keypair>()
     for (let i = 0; i < 12; i++) {
-        let key = loadWalletKey(`${cwd}/tests-fixtures/keys/${i}.json`)
+        let key = loadWalletKey(`${cwd}/${dir}/${i}.json`)
         map.set(key.publicKey.toBase58(), key)
     }
     return map

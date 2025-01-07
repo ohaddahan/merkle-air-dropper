@@ -40,7 +40,7 @@ describe('0-prep', () => {
     })
 
     it('Airdrops', async () => {
-        const claimants = Array.from(walletMap().values());
+        const claimants = Array.from(walletMap("/tests-fixtures/keys/").values());
 
         for (const key of [...users, admin, ...claimants]) {
             await airdrop(program, key.publicKey, LAMPORTS_PER_SOL * 50_000)

@@ -6,14 +6,16 @@
     "solita": "npx tsx solita.ts"
   },
   "dependencies": {
-    "@codama/nodes-from-anchor": "^1.1.0",
-    "@codama/renderers": "^1.0.5",
+    "@codama/nodes-from-anchor": "1.1.0",
+    "@codama/renderers": "1.0.5",
     "@coral-xyz/anchor": "0.29.0",
     "@metaplex-foundation/beet-solana": "0.4.1",
     "@metaplex-foundation/solita": "0.20.1",
-    "@solana/spl-token": "0.3.11",
-    "@solana/web3.js": "1.91.7",
-    "codama": "^1.2.0"
+    "@solana/spl-token": "0.4.9",
+    "@solana/web3.js": "1.98.0",
+    "codama": "1.2.0",
+    "keccak256": "1.0.6",
+    "rpc-websocket": "0.7.6"
   },
   "devDependencies": {
     "@types/bn.js": "5.1.5",
@@ -21,7 +23,7 @@
     "@types/mocha": "10.0.10",
     "chai": "5.1.0",
     "cliui": "8.0.1",
-    "mocha": "11.0.1",
+    "mocha": "10.8.2",
     "prettier": "3.2.5",
     "ts-mocha": "10.0.0",
     "tslib": "2.6.0",

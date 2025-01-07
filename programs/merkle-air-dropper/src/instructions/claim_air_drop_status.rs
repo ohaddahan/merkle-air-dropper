@@ -5,6 +5,7 @@ use crate::state::air_drop_status::AirDropStatus;
 use crate::state::merkle_air_dropper_source::MerkleAirDropperSource;
 use crate::utils::{transfer_token_pda, vec_to_array};
 use anchor_lang::prelude::*;
+use anchor_lang::solana_program::log::{sol_log, sol_log_compute_units};
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token::{Mint, Token, TokenAccount};
 use common::helpers::Claimant;
@@ -93,6 +94,8 @@ pub fn claim_air_drop(ctx: Context<ClaimAirDrop>, args: ClaimAirDropArgs) -> Res
         .collect::<Vec<[u8; 32]>>();
     let leaves_to_prove = leaves_to_prove.as_slice();
 
+    sol_log("Before proof");
+    sol_log_compute_units();
     require!(
         proof.verify(
             merkle_root,
@@ -102,6 +105,8 @@ pub fn claim_air_drop(ctx: Context<ClaimAirDrop>, args: ClaimAirDropArgs) -> Res
         ),
         ErrorCode::InvalidProof
     );
+    sol_log_compute_units();
+    sol_log("After proof");
 
     require_eq!(1, leaves_to_prove.len(), ErrorCode::InvalidProofLength);
 

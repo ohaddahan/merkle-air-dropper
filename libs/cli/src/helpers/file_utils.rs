@@ -1,5 +1,6 @@
 #![allow(dead_code)]
 use common::helpers::{Claimant, MerkleOutput};
+use serde::Serialize;
 use solana_sdk::signature::Keypair;
 use std::fs::File;
 use std::io::{Read, Write};
@@ -40,6 +41,39 @@ pub fn read_keys_from_dir(path: &str) -> Vec<Keypair> {
     keys
 }
 
+pub fn read_keypair_from_file(path: &str) -> Keypair {
+    let mut file = File::open(path).unwrap();
+    let mut content = String::new();
+    file.read_to_string(&mut content).unwrap();
+    let keypair_bytes: Vec<u8> = serde_json::from_str(&content).unwrap();
+    Keypair::from_bytes(&keypair_bytes).unwrap()
+}
+
+pub fn write_keypair_to_file(file_path: &str, keypair: &Keypair) {
+    let cwd = env::current_dir().unwrap();
+    let full_path = format!("{}/{}", cwd.to_str().unwrap_or_default(), file_path);
+    let mut file = File::create(full_path.clone()).unwrap_or_else(|_| {
+        panic!(
+            "[write_keypair_to_file]::Failed to write file = {}",
+            full_path
+        )
+    });
+    let keypair_str = serde_json::to_string_pretty(&keypair.to_bytes().to_vec()).unwrap();
+    file.write_all(keypair_str.as_bytes()).unwrap();
+}
+
+pub fn write_plan_to_file<T>(file_path: &str, records: &[T])
+where
+    T: Serialize,
+{
+    let cwd = env::current_dir().unwrap();
+    let full_path = format!("{}/{}", cwd.to_str().unwrap_or_default(), file_path);
+    let mut file = File::create(full_path.clone())
+        .unwrap_or_else(|_| panic!("[write_plan_to_file]::Failed to write file = {}", full_path));
+    let records_str = serde_json::to_string_pretty(&records).unwrap();
+    file.write_all(records_str.as_bytes()).unwrap();
+}
+
 pub fn write_merkle_to_file(file_path: &str, merkle_output: MerkleOutput) {
     let cwd = env::current_dir().unwrap();
     let full_path = format!("{}/{}", cwd.to_str().unwrap_or_default(), file_path);
@@ -69,4 +103,8 @@ pub fn read_merkle_from_file(file_path: &str) -> MerkleOutput {
         )
     });
     merkle
+}
+
+pub fn is_file_exists(path: &str) -> bool {
+    fs::metadata(path).is_ok()
 }
