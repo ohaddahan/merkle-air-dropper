@@ -46,8 +46,7 @@ pub fn read_keypair_from_file(path: &str) -> Keypair {
     let mut content = String::new();
     file.read_to_string(&mut content).unwrap();
     let keypair_bytes: Vec<u8> = serde_json::from_str(&content).unwrap();
-    let keypair = Keypair::from_bytes(&keypair_bytes).unwrap();
-    keypair
+    Keypair::from_bytes(&keypair_bytes).unwrap()
 }
 
 pub fn write_keypair_to_file(file_path: &str, keypair: &Keypair) {
