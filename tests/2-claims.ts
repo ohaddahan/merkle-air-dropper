@@ -35,7 +35,7 @@ describe('1-success-claim', () => {
         const cwd = process.cwd()
         const merkle_file = fs.readFileSync(`${cwd}/tests-fixtures/plan/merkle.json`).toString()
         merkle_json = JSON.parse(merkle_file)
-        const claimants = walletMap();
+        const claimants = walletMap("/tests-fixtures/keys/");
         const claimant = Array.from(claimants.values())[2]
         const claimantData = findDataInMerkle(claimant.publicKey, merkle_json)
         assert(claimantData !== null)
@@ -90,7 +90,7 @@ describe('1-success-claim', () => {
         const cwd = process.cwd()
         const merkle_file = fs.readFileSync(`${cwd}/tests-fixtures/plan/merkle.json`).toString()
         merkle_json = JSON.parse(merkle_file)
-        const claimants = walletMap();
+        const claimants = walletMap("/tests-fixtures/keys/");
         const claimant = Array.from(claimants.values())[2]
         const claimantData = findDataInMerkle(claimant.publicKey, merkle_json)
         assert(claimantData !== null)

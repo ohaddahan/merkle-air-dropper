@@ -29,7 +29,7 @@ describe('1-create-air-dropper', () => {
                 seed: 1,
                 merkleRoot: merkle_json.root,
                 maxTotalClaim: LAMPORTS_PER_SOL * 1_000,
-                maxNumNodes: 12,
+                maxNumNodes: merkle_json.leafs.length,
                 signer: admin.publicKey,
                 mint,
                 leavesLen: merkle_json.leafs.length
