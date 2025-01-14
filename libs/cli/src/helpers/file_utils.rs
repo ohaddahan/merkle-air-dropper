@@ -41,6 +41,17 @@ pub fn read_keys_from_dir(path: &str) -> Vec<Keypair> {
     keys
 }
 
+pub fn read_combined_from_file(path: &str) -> Vec<Keypair> {
+    let mut file = File::open(path).unwrap();
+    let mut content = String::new();
+    file.read_to_string(&mut content).unwrap();
+    let keypairs: Vec<Vec<u8>> = serde_json::from_str(&content).unwrap();
+    keypairs
+        .into_iter()
+        .map(|key| Keypair::from_bytes(&*key).unwrap())
+        .collect()
+}
+
 pub fn read_keypair_from_file(path: &str) -> Keypair {
     let mut file = File::open(path).unwrap();
     let mut content = String::new();
