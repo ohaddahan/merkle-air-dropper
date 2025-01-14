@@ -4,8 +4,10 @@ import MerkleAirDropper from "./target/idl/merkle_air_dropper.json";
 import {renderJavaScriptVisitor, renderRustVisitor} from '@codama/renderers';
 
 async function main() {
-    console.log("MerkleAirDropper", MerkleAirDropper)
-    const codama = createFromRoot(rootNodeFromAnchor(MerkleAirDropper));
+    console.log("MerkleAirDropper", MerkleAirDropper);
+    // if it fails, add metadata: anchor in the IDL
+    const root = rootNodeFromAnchor(MerkleAirDropper);
+    const codama = createFromRoot(root);
     codama.accept(renderJavaScriptVisitor('codama/js'));
     codama.accept(renderRustVisitor('codama/rust'));
 }

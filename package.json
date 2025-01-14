@@ -3,7 +3,8 @@
   "scripts": {
     "lint:fix": "prettier */*.js \"*/**/*{.js,.ts}\" -w",
     "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check",
-    "solita": "npx tsx solita.ts"
+    "solita": "npx tsx solita.ts",
+    "codama": "npx tsx codama.ts"
   },
   "dependencies": {
     "@codama/nodes-from-anchor": "1.1.0",
