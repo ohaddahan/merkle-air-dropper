@@ -6,6 +6,7 @@ import {renderJavaScriptVisitor, renderRustVisitor} from '@codama/renderers';
 async function main() {
     console.log("MerkleAirDropper", MerkleAirDropper);
     // if it fails, add metadata: anchor in the IDL
+    // @ts-ignore
     const root = rootNodeFromAnchor(MerkleAirDropper);
     const codama = createFromRoot(root);
     codama.accept(renderJavaScriptVisitor('codama/js'));
