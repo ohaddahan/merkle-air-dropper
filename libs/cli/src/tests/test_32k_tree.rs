@@ -2,8 +2,8 @@
 mod tests {
     use crate::helpers::create_plan::create_plan;
     use crate::helpers::file_utils::{
-        is_file_exists, read_keypair_from_file, write_keypair_to_file, write_merkle_to_file,
-        write_plan_to_file,
+        is_file_exists, read_combined_from_file, read_keypair_from_file, write_keypair_to_file,
+        write_merkle_to_file, write_plan_to_file,
     };
     use common::helpers::Claimant;
     use solana_sdk::native_token::LAMPORTS_PER_SOL;
@@ -12,20 +12,7 @@ mod tests {
 
     #[test]
     pub fn test_32k_tree() {
-        let mut keys: Vec<Keypair> = Vec::with_capacity(50_000);
-        for index in 0..32_000 {
-            let f = format!("../../tests-fixtures/32k-keys/{}.json", index);
-            let keypair = Keypair::new();
-            write_keypair_to_file(&f, &keypair);
-            let keypair = if is_file_exists(&f) {
-                read_keypair_from_file(&f)
-            } else {
-                let k = Keypair::new();
-                write_keypair_to_file(&f, &k);
-                k
-            };
-            keys.push(keypair)
-        }
+        let keys = read_combined_from_file("../../tests-fixtures/32k-keys/combined.json");
         let mut leaf_values: Vec<Claimant> = Vec::new();
         for (index, key) in keys.iter().enumerate() {
             leaf_values.push(Claimant {
