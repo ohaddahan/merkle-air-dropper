@@ -48,7 +48,7 @@ pub fn read_combined_from_file(path: &str) -> Vec<Keypair> {
     let keypairs: Vec<Vec<u8>> = serde_json::from_str(&content).unwrap();
     keypairs
         .into_iter()
-        .map(|key| Keypair::from_bytes(&*key).unwrap())
+        .map(|key| Keypair::from_bytes(&key).unwrap())
         .collect()
 }
 
